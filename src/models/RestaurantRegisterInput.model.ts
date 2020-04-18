@@ -2,7 +2,7 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 export class RestaurantRegisterInput {
 @ApiModelProperty()
-Name: string;
+Email: string;
 
 @ApiModelProperty()
 Password: string;

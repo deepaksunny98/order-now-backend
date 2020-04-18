@@ -6,36 +6,67 @@ import {
   Body,
   Delete,
   Query,
+  HttpException,
+  HttpStatus,
+  Put,
 } from '@nestjs/common';
-import { Tables } from './../database/entity/Tables';
-import { Menu } from './../database/entity/Menu';
-import {
-  ApiImplicitBody,
-  ApiImplicitParam,
-  ApiImplicitQuery,
-} from '@nestjs/swagger';
+import { ApiImplicitParam, ApiImplicitQuery } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
-import { RestaurantRegisterInput } from './../models/RestaurantRegisterInput.model';
+import {
+  RestaurantRegisterInput,
+  MenuInput,
+  UpdateMenuInput,
+  TablePostInput,
+  TableUpdateInput,
+} from './../models';
+import { Tables, Menu } from './../database/entity';
 
 @Controller('admin')
 export class AdminController {
   constructor(private service: AdminService) {}
 
   @Post('login')
-  // @ApiImplicitBody({ name: 'input', type: Users })
-  async login(@Body() input) {
-    console.log('input --> ', input);
+  async login(@Body() input: RestaurantRegisterInput) {
+    try {
+      return await this.service.login(input);
+    } catch (err) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          error: 'Invalid Username or Password ',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
   }
 
   @Post('register')
   async register(@Body() input: RestaurantRegisterInput) {
-    return await this.service.register(input);
+    try {
+      return await this.service.register(input);
+    } catch (err) {
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          error: 'Email Already Exists',
+        },
+        HttpStatus.CONFLICT,
+      );
+    }
+  }
+
+  @Get('getRestaurantByUserId')
+  @ApiImplicitQuery({
+    name: 'userId',
+    required: true,
+  })
+  async getRestaurantByUserId(@Query('userId') userId) {
+    return await this.service.getRestaurantByUserId(userId);
   }
 
   @Get('getMyMenu')
   @ApiImplicitQuery({
     name: 'restaurantId',
-    description: 'number',
     required: true,
   })
   async getMyMenu(@Query('restaurantId') restaurantId) {
@@ -46,35 +77,45 @@ export class AdminController {
     }, {});
   }
 
+  @Post('menu')
+  async createMenu(@Body() menuInput: MenuInput) {
+    return await this.service.saveMenu(menuInput);
+  }
+
+  @Put('menu')
+  async updateMenu(@Body() menuInput: UpdateMenuInput) {
+    return await this.service.updateMenu(menuInput);
+  }
+
+  @Delete('menu/:id')
+  @ApiImplicitParam({ name: 'id', required: true })
+  async deleteMenu(@Param('id') menuId) {
+    return await Menu.delete(menuId);
+  }
+
   @Get('getTablesByResId')
   @ApiImplicitQuery({
     name: 'restaurantId',
     required: true,
   })
-  async getRestaurant(@Query() restaurantId: number) {
+  async getRestaurant(@Query('restaurantId') restaurantId: number) {
     return await this.service.getTables(restaurantId);
   }
 
-  @Post('menu')
-  @ApiImplicitBody({ name: 'menuInput', type: Menu })
-  async createMenu(@Body() menuInput) {
-    return await Menu.save(menuInput);
+  @Post('tables')
+  async createTable(@Body() tableInput: TablePostInput) {
+    return await this.service.addTable(tableInput);
   }
 
-  @Post('tables')
-  @ApiImplicitBody({ name: 'tableInput', type: Tables })
-  async createTable(@Body() tableInput) {
-    return await Tables.save(tableInput);
+  @Put('tables')
+  async updateTable(@Body() tableInput: TableUpdateInput) {
+    return await this.service.updateTable(tableInput);
   }
-  @Delete('menu/:id')
-  @ApiImplicitParam({ name: 'id', description: 'number', required: true })
-  async deleteMenu(@Param() menuId) {
-    return await Menu.delete(menuId.id);
-  }
+
   @Delete('tables/:id')
-  @ApiImplicitParam({ name: 'id', description: 'number', required: true })
-  async deleteTable(@Param() tableId) {
-    return await Tables.delete(tableId.id);
+  @ApiImplicitParam({ name: 'id', required: true })
+  async deleteTable(@Param('id') tableId) {
+    return await Tables.delete(tableId);
   }
 
   // @Post('login')

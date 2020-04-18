@@ -16,12 +16,13 @@ import { AdminController } from './admin/admin.controller';
 })
 export class AppModule implements NestModule {
   configure(consumer: import('@nestjs/common').MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .exclude(
-        { path: 'admin/login', method: RequestMethod.POST },
-        { path: 'admin/register', method: RequestMethod.POST },
-      )
-      .forRoutes(AdminController, CustomerController);
+    // consumer
+    //   .apply(AuthMiddleware)
+    //   .exclude(
+    //     { path: 'admin/login', method: RequestMethod.POST },
+    //     { path: 'admin/register', method: RequestMethod.POST },
+    //     { path: 'customer/login', method: RequestMethod.POST },
+    //   )
+    //   .forRoutes(AdminController, CustomerController);
   }
 }

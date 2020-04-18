@@ -8,18 +8,21 @@ export class Users extends BaseEntity {
   UserId: number;
 
   @Column()
-  Name: string;
+  FirstName: string;
 
   @Column()
-  Location: string;
+  LastName: string;
 
   @Column()
-  Mobile: number;
+  Mobile: string;
 
   @Column()
   Type: string;
 
   @Column()
   Password: string;
+
+  @Column()
+  Email: string;
 
 }

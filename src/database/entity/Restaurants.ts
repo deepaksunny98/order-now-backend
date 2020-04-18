@@ -24,4 +24,7 @@ export class Restaurants extends BaseEntity {
 
     @Column()
     time: number;
+
+    @Column()
+    userId: number;
 }
