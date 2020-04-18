@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import * as fs from 'fs';
+import 'reflect-metadata';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,7 +12,7 @@ async function bootstrap() {
   .addTag('SHVY')
   .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('shvy/swagger', app, document);
+  SwaggerModule.setup('api/swagger', app, document);
   app.enableCors();
   await app.listen(3000);
 }
