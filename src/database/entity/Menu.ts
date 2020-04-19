@@ -1,4 +1,4 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, PrimaryColumn } from "typeorm";
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, PrimaryColumn } from 'typeorm';
 
 @Entity({
     name: 'Menu',
@@ -6,20 +6,28 @@ import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, PrimaryColumn } fro
 export class Menu extends BaseEntity {
     @PrimaryGeneratedColumn()
     MenuId: number;
-    @Column()
-    CategoryId: number;
+
     @Column()
     RestaurantId: number;
+
     @Column()
     Name: string;
+
     @Column()
     ImageUrl: string;
+
     @Column()
-    OrderedCount:string;
+    OrderedCount: string;
+
     @Column()
     Rating: string;
+
     @Column()
     PreparationTime: number;
+
     @Column()
-    Amount: string;
+    Amount: number;
+
+    @Column()
+    Type: string;
 }

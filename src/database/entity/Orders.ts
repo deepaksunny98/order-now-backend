@@ -1,21 +1,32 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, PrimaryColumn } from "typeorm";
+import { Entity, BaseEntity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity({
-    name: 'Orders',
+  name: 'Orders',
 })
 export class Orders extends BaseEntity {
-    @PrimaryGeneratedColumn({type:'uuid'})
-    OrderId: number;
-    @Column()
-    UserId: number;
-    @Column()
-    RestaurantId: number;
-    @Column()
-    TableId: number;
-    @Column()
-    MenuId: string;
-    @Column()
-    Amount:string;
-    @Column()
-    OrderDateTime: string;
+
+  @PrimaryColumn()
+  OrderId: string;
+
+  @Column()
+  UserId: number;
+
+  @Column()
+  RestaurantId: number;
+
+  @Column()
+  TableId: number;
+
+  @Column()
+  Amount: number;
+
+  @Column()
+  OrderDateTime: Date;
+
+  @Column()
+  Name: string;
+
+  @Column()
+  PhoneNumber: string;
+
 }
