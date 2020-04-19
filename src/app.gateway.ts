@@ -13,7 +13,7 @@ import { Socket, Server } from 'socket.io';
 @WebSocketGateway()
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  connectedClients: Map<number, any> = new Map();
+  connectedClients: Map<string, string> = new Map();
 
   @WebSocketServer() wss: Server;
 
@@ -27,23 +27,31 @@ export class AppGateway
       clientType: client.handshake.query.clientType,
       socketId: client.id,
     };
-    this.connectedClients.set(client.handshake.query.Id, params);
+    this.connectedClients.set(client.id, client.handshake.query.Id);
     console.log(this.connectedClients);
   }
 
   handleDisconnect(client: Socket) {
     Logger.error(`Client Disconnected: ${client.id}`);
-    this.connectedClients.delete(client.handshake.query.Id);
+    this.connectedClients.delete(client.id);
     console.log(this.connectedClients);
   }
 
-  @SubscribeMessage('SendOrder')
-  handleMessage(client: Socket, payload: any): WsResponse<string> {
-    Logger.log(`order received from ${client.id} `);
-    this.wss.to(this.connectedClients.get(payload.restaurantId).socketId).emit('ReceiveOrder', payload);
+  // @SubscribeMessage('SendOrder')
+  SendOrder(payload: any): WsResponse<string> {
+    // Logger.log(`order received from ${client.id} `);
+    this.wss.to(this.getByValue(`R${payload.restaurantId}`)).emit('NewOrder', payload);
     return {
       event: 'OrderSent',
       data: 'order has been sent Successfully',
     };
+  }
+
+  getByValue(searchValue: string) {
+    for (const [key, value] of this.connectedClients.entries()) {
+      if (value === searchValue) {
+        return key;
+      }
+    }
   }
 }

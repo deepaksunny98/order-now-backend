@@ -1,13 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import { Menu, Tables, Users, Restaurants } from './../database/entity';
+import {
+  Menu,
+  Tables,
+  Users,
+  Restaurants,
+  Orders,
+  OrderItems,
+} from './../database/entity';
 import {
   RestaurantRegisterInput,
   MenuInput,
   UpdateMenuInput,
   TablePostInput,
   TableUpdateInput,
+  OrdersOutput,
+  MenuItem,
 } from './../models';
 
 @Injectable()
@@ -83,6 +92,45 @@ export class AdminService {
         });
       });
     });
+  }
+
+  async getOrders(restaurantId: number): Promise<OrdersOutput[]> {
+    const orders = await Orders.find({
+      where: { RestaurantId: restaurantId },
+      order: {
+        OrderDateTime: 'DESC',
+      },
+    });
+    const ordersArr: OrdersOutput[] = [];
+    for (const orderObj of orders) {
+      const orderOutput = new OrdersOutput();
+      orderOutput.orderId = orderObj.OrderId;
+      orderOutput.menuItems = await this.getMenuItems(orderObj.OrderId);
+      orderOutput.tableNo = await this.getTableNo(orderObj.TableId);
+      orderOutput.phoneNumber = orderObj.PhoneNumber;
+      orderOutput.name = orderObj.Name;
+      orderOutput.amount = orderObj.Amount;
+      orderOutput.orderedTime = orderObj.OrderDateTime;
+      ordersArr.push(orderOutput);
+    }
+    return ordersArr;
+  }
+
+  async getMenuItems(orderId: string) {
+    const menuItemsArr: MenuItem[] = [];
+    const menuItems = await OrderItems.find({ where: { OrderId: orderId } });
+    for (const menuItemObj of menuItems) {
+      const menuItem = new MenuItem();
+      menuItem.item = menuItemObj.Name;
+      menuItem.price = menuItemObj.Amount;
+      menuItem.quantity = menuItemObj.Quantity;
+      menuItemsArr.push(menuItem);
+    }
+    return menuItemsArr;
+  }
+
+  async getTableNo(tableId: number) {
+    return (await Tables.findOne(tableId)).TableNo;
   }
 
   async getRestaurantByUserId(userId: number) {

@@ -55,6 +55,15 @@ export class AdminController {
     }
   }
 
+  @Get('ordersByRestaurantId')
+  @ApiImplicitQuery({
+    name: 'restaurantId',
+    required: true,
+  })
+  async getOrders(@Query('restaurantId') restaurantId: number) {
+    return await this.service.getOrders(restaurantId);
+  }
+
   @Get('getRestaurantByUserId')
   @ApiImplicitQuery({
     name: 'userId',

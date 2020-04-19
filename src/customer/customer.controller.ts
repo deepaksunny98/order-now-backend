@@ -1,8 +1,7 @@
 import { Controller, Post, Body, Get, Query } from '@nestjs/common';
-import { ApiImplicitBody, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiImplicitQuery } from '@nestjs/swagger';
 import { CustomerService } from './customer.service';
-import { Orders } from './../database/entity';
-import { CustomerLoginInput } from './../models';
+import { CustomerLoginInput, BookingInput } from './../models';
 
 @Controller('customer')
 export class CustomerController {
@@ -14,8 +13,7 @@ export class CustomerController {
   }
 
   @Post('booking')
-  @ApiImplicitBody({ name: 'bookingInput', type: Orders })
-  async booktable(@Body() bookingInput) {
+  async booktable(@Body() bookingInput: BookingInput) {
     return await this.service.booktable(bookingInput);
   }
 

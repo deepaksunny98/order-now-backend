@@ -4,6 +4,8 @@ import { RestaurantRegisterInput } from './RestaurantRegisterInput.model';
 import { TablePostInput } from './TablePostInput.model';
 import { TableUpdateInput } from './TableUpdateInput.model';
 import { UpdateMenuInput } from './UpdateMenuInput.model';
+import { BookingInput, CartItems } from './BookingInput.model';
+import { OrdersOutput, MenuItem } from './OrdersOutput.model';
 
 export {
   CustomerLoginInput,
@@ -12,4 +14,8 @@ export {
   TablePostInput,
   TableUpdateInput,
   UpdateMenuInput,
+  BookingInput,
+  OrdersOutput,
+  MenuItem,
+  CartItems,
 };

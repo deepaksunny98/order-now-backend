@@ -1,12 +1,12 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, BaseEntity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity({
   name: 'Orders',
 })
 export class Orders extends BaseEntity {
 
-  @PrimaryGeneratedColumn()
-  OrderId: number;
+  @PrimaryColumn()
+  OrderId: string;
 
   @Column()
   UserId: number;
@@ -18,12 +18,15 @@ export class Orders extends BaseEntity {
   TableId: number;
 
   @Column()
-  MenuId: string;
-
-  @Column()
-  Amount: string;
+  Amount: number;
 
   @Column()
   OrderDateTime: Date;
+
+  @Column()
+  Name: string;
+
+  @Column()
+  PhoneNumber: string;
 
 }
